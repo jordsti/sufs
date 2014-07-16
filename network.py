@@ -29,10 +29,9 @@ class packet_header:
             self.packet_id = get_packet_id()
 
     def __parse_data(self, data):
-        pattern = re.compile("\\[Header:(?P<id>[0-9]+):(?P<type>[0-9]+):(?P<length>[0-9])\\]\\((?P<fields>.*)\\)")
+        pattern = re.compile("\\[Header:(?P<id>[0-9]+):(?P<type>[0-9]+):(?P<length>[0-9]+)\\]\\((?P<fields>.*)\\)$")
 
         m = pattern.match(data)
-
         if m:
             self.packet_id = int(m.group("id"))
             self.packet_type = int(m.group("type"))
@@ -49,6 +48,10 @@ class packet_header:
 
         else:
             #todo raise an exception for bad packet
+            print "error while parsing packet"
+            print "----------------"
+            print data
+            print "----------------"
             pass
 
     def to_chunk(self):
@@ -61,6 +64,7 @@ class packet_header:
         data = "[Header:%d:%d:%d](%s)" % (self.packet_id, self.packet_type, self.length, fdata)
 
         return data
+
 
 class packet:
 
@@ -76,6 +80,8 @@ class packet:
                 self.header = packet_header(packet_data[0])
                 if len(packet_data[1]) > 0:
                     self.bytes = packet_data[1]
+
+            print packet_data[0]
 
     def to_string(self):
         txt = "Packet\n"

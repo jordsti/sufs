@@ -83,6 +83,7 @@ class server(SocketServer.UDPServer):
                 d_child = ET.SubElement(xml_child, 'dir', {'name': c.name})
                 self.xml_fill_dir(d_child, c)
 
+
 class connection_handler(SocketServer.BaseRequestHandler):
 
     def handle(self):
@@ -112,7 +113,7 @@ class connection_handler(SocketServer.BaseRequestHandler):
 
 if  __name__ == '__main__':
 
-    _server = server(8080, 'C:\Users\JordSti\Downloads')
+    _server = server(8080, 'C:\Users\JordSti\Documents\ps_out\images')
     _server.produce_xml()
     _server.load_xml()
 

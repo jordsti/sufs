@@ -1,6 +1,8 @@
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
+.index_cache
+*.xml
 
 #idea files
 .idea/*.xml

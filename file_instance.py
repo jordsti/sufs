@@ -1,12 +1,12 @@
 __author__ = 'JordSti'
-import hashlib
 import network
+import block
 
-class file_block:
 
-    def __init__(self, parent_hash, block_id, data):
-        self.parent_hash = parent_hash
-        self.block_id = block_id
+class file_block(block.block):
+
+    def __init__(self, parent_hash, block_id, data=None):
+        block.block.__init__(self, parent_hash, block_id)
         self.data = data
         self.length = len(data)
 
@@ -15,7 +15,7 @@ class file_instance:
 
     (DefaultBlockSize) = 1024
 
-    def __init__(self, file_entry, block_size = DefaultBlockSize):
+    def __init__(self, file_entry, block_size=DefaultBlockSize):
         self.entry = file_entry
         self.block_size = block_size
         self.__blocks = []
@@ -28,6 +28,7 @@ class file_instance:
         p = network.packet()
         p.header = network.packet_header()
         p.header.packet_type = network.packet_header.FileInformation
+        p.header.fields['name'] = self.entry.name
         p.header.fields['hash'] = self.hash
         p.header.fields['length'] = self.length
 
@@ -60,7 +61,7 @@ class file_instance:
         p.header.length = b.length
         p.header.fields['block_id'] = b.block_id
         p.bytes = b.data
-
+        print p.to_string()
         return p
 
     def __load_blocks(self):
