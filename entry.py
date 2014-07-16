@@ -16,6 +16,10 @@ class entry:
         return self.entry_type == self.File
 
     def is_dir(self):
+        print "CALL TO REMOVE entry.is_dir"
+        return self.entry_type == self.Folder
+
+    def is_folder(self):
         return self.entry_type == self.Folder
 
     def is_root(self):

@@ -1,6 +1,7 @@
 __author__ = 'JordSti'
 import os
 import entry
+import re
 import xml.etree.ElementTree as ET
 
 def get_indent_str(indent):
@@ -19,7 +20,7 @@ class entry_tree:
             pass
         #scanroot
 
-    def print_tree(self):
+    def to_string(self):
         txt = ""
         txt += "Printing Tree\n"
         txt += "[root]\n"
@@ -27,11 +28,11 @@ class entry_tree:
             if c.is_file():
                 txt += "-%s  hash: %s length: %d\n" % (c.name, c.get_hash(), c.length)
             elif c.is_dir():
-                txt += self.__print_folder(c)
+                txt += self.__to_string_folder(c)
 
-        print txt
+        return txt
 
-    def __print_folder(self, folder, indent=1):
+    def __to_string_folder(self, folder, indent=1):
         txt = ""
         txt += "%s[%s]\n" % (get_indent_str(indent), folder.name)
 
@@ -39,9 +40,39 @@ class entry_tree:
             if c.is_file():
                 txt += "%s-%s  hash: %s length: %d fp: %s\n" % (get_indent_str(indent),c.name, c.get_hash(), c.length, c.get_fullpath())
             elif c.is_dir():
-                txt += self.__print_folder(c, indent + 1)
+                txt += self.__to_string_folder(c, indent + 1)
 
         return txt
+
+    def get_entry(self, rel_path):
+        pattern = re.compile('\\\\|/')
+
+        ex_path = pattern.split(rel_path)
+        last_i = len(ex_path) - 1
+        entity_name = ex_path[last_i]
+
+        current = self.root
+        last_entry = current
+
+        level = 0
+        while level <= last_i:
+            for e in current.childs:
+                if level == last_i:
+                    if e.name == entity_name:
+                        print "found !"
+                        return e
+                else:
+                    c_name = ex_path[level]
+                    if c_name == e.name and e.entry_type == entry.entry.Folder:
+                        current = e
+
+            if not current == last_entry:
+                last_entry = current
+                level += 1
+            else:
+                print "not found"
+                break
+
 
 
     def build_tree(self, root_path):
@@ -144,6 +175,8 @@ if __name__ == '__main__':
 
     et = entry_tree()
     #et.build_tree('C:\Users\JordSti\gitprojects\dc-deck')
-    et.from_xml('dc-deck.xml')
-    et.print_tree()
+    et.from_xml('index.xml')
+    print et.to_string()
+    fe = et.get_entry('README.md')
+    print fe.name, fe.get_fullpath()
     #et.produce_xml('dc-deck.xml')

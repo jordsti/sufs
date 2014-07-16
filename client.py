@@ -11,6 +11,10 @@ class client:
         self.socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
         self.buffer_size = 4096
 
+    def set_endpoint(self, endpoint):
+        self.host = endpoint.hostname
+        self.port = endpoint.port
+
     def endpoint(self):
         return self.host, self.port
 
@@ -20,8 +24,7 @@ class client:
 
     def receive(self):
         data = self.socket.recv(self.buffer_size)
-        p = network.packet(data)
-        return p
+        return data
 
 if __name__ == '__main__':
 

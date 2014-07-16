@@ -3,6 +3,7 @@ __pycache__/
 *.py[cod]
 .index_cache
 *.xml
+*.cache
 
 #idea files
 .idea/*.xml

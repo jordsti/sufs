@@ -60,6 +60,7 @@ class file_instance:
         p.header.packet_type = network.packet_header.FileBlock
         p.header.length = b.length
         p.header.fields['block_id'] = b.block_id
+        p.header.fields['parent_hash'] = self.hash
         p.bytes = b.data
         print p.to_string()
         return p
