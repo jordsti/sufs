@@ -1,5 +1,6 @@
 __author__ = 'JordSti'
 import os
+import hashlib
 
 
 class entry:
@@ -36,13 +37,34 @@ class entry:
 
         return fpath
 
-
-
 class e_file(entry):
 
     def __init__(self, name=None, parent=None):
         entry.__init__(self, name, parent, self.File)
         self.childs = None
+        self.__hash = None
+
+        if os.path.exists(self.get_fullpath()):
+            self.__do_hash()
+
+    def __do_hash(self):
+        print "Hashing %s" % self.name
+        length = 2048
+        md5 = hashlib.md5()
+        fp = open(self.get_fullpath(), 'r')
+        chunk = fp.read(length)
+
+        while len(chunk) == length:
+            md5.update(chunk)
+            chunk = fp.read(length)
+
+        md5.update(chunk)
+
+        self.__hash = md5.hexdigest()
+
+
+    def get_hash(self):
+        return self.__hash
 
 
 class e_dir(entry):
