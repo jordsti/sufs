@@ -92,6 +92,18 @@ class e_file(entry):
     def set_hash(self, hash):
         self.__hash = hash
 
+    def get_size(self):
+        b = self.length % 1024
+        kb = self.length / 1024
+        mb = self.length / (1024*1024)
+
+        if mb > 1:
+            return "%d.%d mb(s)" % (mb, kb)
+        elif kb > 1:
+            return "%d.%d kb(s)" % (kb, b)
+        else:
+            return "%d byte(s)" % b
+
 
 class e_dir(entry):
 

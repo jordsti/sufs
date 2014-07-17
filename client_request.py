@@ -117,3 +117,37 @@ class index_retrieve(network_request):
         else:
             print self.index_ctor.missing_blocks()
 
+
+
+class file_request(network_request):
+
+    def __init__(self, endpoint, filepath, received=None):
+        network_request.__init__(self, endpoint, received)
+        self.file_ctor = None
+        self.filepath = filepath
+
+    def run(self):
+        #forging packet
+        p = network.packet()
+        p.header = network.packet_header()
+        p.header.packet_type = network.packet_header.Request
+        p.header.fields['request'] = 'ask_file_info'
+        p.header.fields['file'] = self.filepath
+        self.send(p)
+
+        recv_packet = self.recv()
+
+        if recv_packet.header.packet_type == network.packet_header.FileInformation:
+            #index info
+            bsize = []
+            length = int(recv_packet.header.fields['length'])
+
+            for bs in recv_packet.header.fields['blocks'].split(','):
+                bsize.append(int(bs))
+
+            name = recv_packet.header.fields['name']
+            fhash = recv_packet.header.fields['hash']
+
+            self.file_ctor = file_constructor.file_constructor(name, fhash, length, bsize)
+
+        self.terminate()

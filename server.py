@@ -33,7 +33,12 @@ class server(SocketServer.UDPServer):
         self.index_blocks = fi
         print "Blocks Count : %d" % fi.blocks_count()
 
+    def get_file(self, hash):
+        for fi in self.loaded_files:
+            if fi.hash == hash:
+                return fi
 
+        return None
 
 class connection_handler(SocketServer.BaseRequestHandler):
 
@@ -58,7 +63,22 @@ class connection_handler(SocketServer.BaseRequestHandler):
                     block_packet = self.server.index_blocks.get_block_packet(b_id)
                     self.send_packet(client, block_packet)
             elif req == 'ask_file_info':
-                pass
+                rel_path = recv_packet.header.fields['file']
+                fe = self.server.get_entry(rel_path)
+                if fe is not None:
+                    #load this file info memory
+                    fi = file_instance.file_instance(fe)
+                    self.server.loaded_files.append(fi)
+                    info_packet = fi.generate_file_info_packet()
+                    self.send_packet(info_packet)
+            elif req == 'file_block':
+                b_id = int(recv_packet.header.fields['block_id'])
+                file_hash = recv_packet.header.fields['hash']
+                fi = self.server.get_file(file_hash)
+                if fi is not None:
+                    bp = fi.get_block_packet(b_id)
+                    self.send_packet(bp)
+
 
 
     def send_packet(self, client, packet):

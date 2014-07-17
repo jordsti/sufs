@@ -16,6 +16,8 @@ class client_gui(QtGui.QMainWindow, gui.Ui_sufs_client_form):
         self.setWindowTitle("sufs client")
         self.requests = []
         self.tree = None
+        self.folder_icon = QtGui.QIcon("gui/folder.png")
+        self.file_icon = QtGui.QIcon("gui/file.png")
         self.__assign_actions()
         self.__init_tree()
 
@@ -29,14 +31,14 @@ class client_gui(QtGui.QMainWindow, gui.Ui_sufs_client_form):
         return ep
 
     def __assign_actions(self):
-
         self.btn_get_index.clicked.connect(self.launch_index_request)
         self.lbl_status_val.setText("Not connected")
 
     def __init_tree(self):
         columns = QtCore.QStringList()
         columns.append("Name")
-        columns.append("Nothing")
+        columns.append("File size")
+        columns.append("File Hash (MD5)")
 
         self.tree_files.setColumnCount(columns.count())
         self.tree_files.setHeaderLabels(columns)
@@ -76,11 +78,15 @@ class client_gui(QtGui.QMainWindow, gui.Ui_sufs_client_form):
             if e.is_file():
                 tf = QtGui.QTreeWidgetItem()
                 tf.setText(0, e.name)
+                tf.setText(1, e.get_size())
+                tf.setText(2, e.get_hash())
+                tf.setIcon(0, self.file_icon)
                 #w_tree.addChild(tf)
                 self.tree_files.addTopLevelItem(tf)
             elif e.is_folder():
                 tf = QtGui.QTreeWidgetItem()
                 tf.setText(0, e.name)
+                tf.setIcon(0 , self.folder_icon)
                 #w_tree.addChild(tf)
                 self.__fill_tree(e, tf)
                 self.tree_files.addTopLevelItem(tf)
@@ -90,10 +96,14 @@ class client_gui(QtGui.QMainWindow, gui.Ui_sufs_client_form):
             if e.is_file():
                 tf = QtGui.QTreeWidgetItem()
                 tf.setText(0, e.name)
+                tf.setText(1, e.get_size())
+                tf.setText(2, e.get_hash())
+                tf.setIcon(0, self.file_icon)
                 tree_item.addChild(tf)
             elif e.is_folder():
                 tf = QtGui.QTreeWidgetItem()
                 tf.setText(0, e.name)
+                tf.setIcon(0 , self.folder_icon)
                 tree_item.addChild(tf)
                 self.__fill_tree(e, tf)
 
