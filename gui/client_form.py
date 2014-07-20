@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'client_form.ui'
 #
-# Created: Wed Jul 16 19:10:10 2014
+# Created: Sun Jul 20 16:15:52 2014
 #      by: PyQt4 UI code generator 4.10.4
 #
 # WARNING! All changes made in this file will be lost!
@@ -65,6 +65,12 @@ class Ui_sufs_client_form(object):
         self.tree_files.setGeometry(QtCore.QRect(10, 140, 521, 301))
         self.tree_files.setObjectName(_fromUtf8("tree_files"))
         self.tree_files.headerItem().setText(0, _fromUtf8("1"))
+        self.lbl_selected_files = QtGui.QLabel(self.centralwidget)
+        self.lbl_selected_files.setGeometry(QtCore.QRect(320, 10, 81, 16))
+        self.lbl_selected_files.setObjectName(_fromUtf8("lbl_selected_files"))
+        self.lw_selected_files = QtGui.QListWidget(self.centralwidget)
+        self.lw_selected_files.setGeometry(QtCore.QRect(320, 30, 256, 91))
+        self.lw_selected_files.setObjectName(_fromUtf8("lw_selected_files"))
         sufs_client_form.setCentralWidget(self.centralwidget)
         self.menubar = QtGui.QMenuBar(sufs_client_form)
         self.menubar.setGeometry(QtCore.QRect(0, 0, 673, 21))
@@ -93,6 +99,7 @@ class Ui_sufs_client_form(object):
         self.lbl_status.setText(_translate("sufs_client_form", "Status :", None))
         self.lbl_status_val.setText(_translate("sufs_client_form", "lbl_status_val", None))
         self.btn_get_index.setText(_translate("sufs_client_form", "Retrieve Index", None))
+        self.lbl_selected_files.setText(_translate("sufs_client_form", "Selected File(s)", None))
         self.menu_File.setTitle(_translate("sufs_client_form", "&File", None))
         self.actionConnect_to_a_server.setText(_translate("sufs_client_form", "Connect to a server...", None))
 

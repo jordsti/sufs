@@ -115,6 +115,29 @@
      </property>
     </column>
    </widget>
+   <widget class="QLabel" name="lbl_selected_files">
+    <property name="geometry">
+     <rect>
+      <x>320</x>
+      <y>10</y>
+      <width>81</width>
+      <height>16</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Selected File(s)</string>
+    </property>
+   </widget>
+   <widget class="QListWidget" name="lw_selected_files">
+    <property name="geometry">
+     <rect>
+      <x>320</x>
+      <y>30</y>
+      <width>256</width>
+      <height>91</height>
+     </rect>
+    </property>
+   </widget>
   </widget>
   <widget class="QMenuBar" name="menubar">
    <property name="geometry">

@@ -20,6 +20,7 @@ class client_gui(QtGui.QMainWindow, gui.Ui_sufs_client_form):
         self.file_icon = QtGui.QIcon("gui/file.png")
         self.__assign_actions()
         self.__init_tree()
+        self.selected_entries = []
 
 
     def get_endpoint(self):
@@ -33,6 +34,36 @@ class client_gui(QtGui.QMainWindow, gui.Ui_sufs_client_form):
     def __assign_actions(self):
         self.btn_get_index.clicked.connect(self.launch_index_request)
         self.lbl_status_val.setText("Not connected")
+        self.tree_files.itemClicked.connect(self.tree_item_clicked)
+
+    def tree_item_clicked(self, src, args):
+        e = src.item
+
+        if e.is_file():
+            if src.checkState(0) == QtCore.Qt.Checked:
+                if e not in self.selected_entries:
+                    self.selected_entries.append(e)
+                    self.lw_selected_files.addItem(e.get_fullpath())
+            else:
+                if e in self.selected_entries:
+                    self.selected_entries.remove(e)
+                    nb = self.lw_selected_files.count()
+                    i = 0
+                    while i < nb:
+                        iw = self.lw_selected_files.item(i)
+                        if iw.text() == e.name:
+                            self.lw_selected_files.removeItemWidget(iw)
+                            nb =- 1
+                        else:
+                            i += 1
+
+                    #todo handle gui
+        elif e.is_folder():
+            #todo
+
+            pass
+
+
 
     def __init_tree(self):
         columns = QtCore.QStringList()
@@ -90,6 +121,9 @@ class client_gui(QtGui.QMainWindow, gui.Ui_sufs_client_form):
                 #w_tree.addChild(tf)
                 self.__fill_tree(e, tf)
                 self.tree_files.addTopLevelItem(tf)
+            tf.setFlags(tf.flags() | QtCore.Qt.ItemIsUserCheckable)
+            tf.setCheckState(0, QtCore.Qt.Unchecked)
+            tf.item = e
 
     def __fill_tree(self, folder_entry, tree_item):
         for e in folder_entry.childs:
@@ -106,6 +140,9 @@ class client_gui(QtGui.QMainWindow, gui.Ui_sufs_client_form):
                 tf.setIcon(0 , self.folder_icon)
                 tree_item.addChild(tf)
                 self.__fill_tree(e, tf)
+            tf.setFlags(tf.flags() | QtCore.Qt.ItemIsUserCheckable)
+            tf.setCheckState(0, QtCore.Qt.Unchecked)
+            tf.item = e
 
 
     def main(self):
