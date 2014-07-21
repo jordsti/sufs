@@ -46,7 +46,7 @@ class client_job(QtCore.QThread):
     def __sum_length(self):
         self.total_length = 0
         for e in self.selected_entries:
-            self.total_length += e.length
+            self.total_length += float(e.length)
 
     def __init_folder(self):
         if not os.path.exists(self.reception_folder):
@@ -80,7 +80,7 @@ class client_job(QtCore.QThread):
 
         request = client_request.file_retrieve(self.endpoint, self.file_ctor)
 
-        args = job_update_args(self, job_update_args.DownloadingFile, (self.current_length / self.total_length) * 100, file_entry.get_fullpath())
+        args = job_update_args(self, job_update_args.DownloadingFile, (self.current_length / self.total_length) * 100.00, file_entry.get_fullpath())
         self.job_update.emit(args)
 
         request.start()
@@ -96,7 +96,7 @@ class client_job(QtCore.QThread):
         self.file_ctor.write_to_disk(local_path)
 
         #todo more accurate current length needed
-        self.current_length += self.file_ctor.length
+        self.current_length += float(self.file_ctor.length)
 
     def run(self):
         args = job_update_args(self)

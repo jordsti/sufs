@@ -6,7 +6,7 @@ import network
 import entry
 import entry_tree
 from client_request import *
-from client_job import client_job
+from client_job import client_job, job_update_args
 
 class client_gui(QtGui.QMainWindow, gui.Ui_sufs_client_form):
 
@@ -200,7 +200,35 @@ class client_gui(QtGui.QMainWindow, gui.Ui_sufs_client_form):
             tf.item = e
 
     def job_update(self, args):
-        print args.job_id, args.progress, args.current_files, args.progress
+        row = None
+
+        for i in range(self.tbl_jobs.rowCount()):
+            iw = self.tbl_jobs.item(i, 0)
+
+            job_id = int(iw.text())
+
+            if job_id == args.job_id:
+                row = i
+        if row is not None:
+            if args.status == job_update_args.Completed:
+                iw = self.tbl_jobs.item(0, 1)
+                iw.setText("Job completed")
+                iw = self.tbl_jobs.item(0, 2)
+                iw.setText("100 %")
+            else:
+                iw = self.tbl_jobs.item(0, 1)
+
+                if args.status == job_update_args.WaitingForFileInfo:
+                    iw.setText("Waiting for file information...")
+                elif args.status == job_update_args.DownloadingFile:
+                    iw.setText("Downloading file")
+
+                iw = self.tbl_jobs.item(0, 2)
+                iw.setText("%d %" % args.progress)
+
+                iw = self.tbl_jobs.item(0, 3)
+                iw.setText(args.current_files)
+
 
     def start_job(self):
 
@@ -230,6 +258,9 @@ class client_gui(QtGui.QMainWindow, gui.Ui_sufs_client_form):
             cell.setText("0 %")
             self.tbl_jobs.setItem(0, 2, cell)
 
+            cell = QtGui.QTableWidgetItem()
+            cell.setText("")
+            self.tbl_jobs.setItem(0, 3, cell)
 
     def main(self):
         self.show()

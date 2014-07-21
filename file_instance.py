@@ -62,7 +62,7 @@ class file_instance:
         p.header.fields['block_id'] = b.block_id
         p.header.fields['parent_hash'] = self.hash
         p.bytes = b.data
-        print p.to_string()
+        #print p.to_string()
         return p
 
     def __load_blocks(self):

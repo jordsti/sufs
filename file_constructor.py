@@ -72,7 +72,7 @@ class file_constructor:
             if not b.written and not b.missing():
                 fp.write(b.data)
                 b.written = True
-                print "%d written" % b.block_id
+                #print "%d written" % b.block_id
             else:
                 fp.seek(b.length)
 
