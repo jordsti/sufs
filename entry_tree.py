@@ -44,6 +44,33 @@ class entry_tree:
 
         return txt
 
+    def __get_entry_by_hash(self, hash, parent):
+
+        for c in parent.childs:
+            if c.is_file():
+                if c.get_hash() == hash:
+                    return c
+            elif c.is_folder():
+                e = self.__get_entry_by_hash(hash, c)
+                if e is not None:
+                    return e
+
+        return None
+
+    def get_entry_by_hash(self, hash):
+
+        for c in self.root.childs:
+            if c.is_file():
+                if c.get_hash() == hash:
+                    return c
+            elif c.is_folder():
+                e = self.__get_entry_by_hash(hash, c)
+                if e is not None:
+                    return e
+
+        return None
+
+
     def get_entry(self, rel_path):
         pattern = re.compile('\\\\|/')
 

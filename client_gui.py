@@ -6,7 +6,7 @@ import network
 import entry
 import entry_tree
 from client_request import *
-
+from client_job import client_job
 
 class client_gui(QtGui.QMainWindow, gui.Ui_sufs_client_form):
 
@@ -19,7 +19,10 @@ class client_gui(QtGui.QMainWindow, gui.Ui_sufs_client_form):
         self.folder_icon = QtGui.QIcon("gui/folder.png")
         self.file_icon = QtGui.QIcon("gui/file.png")
         self.__assign_actions()
+        self.__init_widgets()
+        self.__init_tables()
         self.__init_tree()
+        self.jobs = []
         self.selected_entries = []
 
 
@@ -31,10 +34,20 @@ class client_gui(QtGui.QMainWindow, gui.Ui_sufs_client_form):
         ep = network.ip_endpoint(host, port)
         return ep
 
-    def __assign_actions(self):
-        self.btn_get_index.clicked.connect(self.launch_index_request)
+    def __init_widgets(self):
+        #label
         self.lbl_status_val.setText("Not connected")
+
+    def __assign_actions(self):
+        #btns
+        self.btn_get_index.clicked.connect(self.launch_index_request)
+        self.btn_start_job.clicked.connect(self.start_job)
+
+        #tree
         self.tree_files.itemClicked.connect(self.tree_item_clicked)
+
+        #menu
+        self.actionQuit.triggered.connect(self.close)
 
     def tree_item_clicked(self, src, args):
         e = src.item
@@ -51,19 +64,61 @@ class client_gui(QtGui.QMainWindow, gui.Ui_sufs_client_form):
                     i = 0
                     while i < nb:
                         iw = self.lw_selected_files.item(i)
-                        if iw.text() == e.name:
-                            self.lw_selected_files.removeItemWidget(iw)
-                            nb =- 1
-                        else:
-                            i += 1
+                        if str(iw.text()) == e.get_fullpath():
+                            self.lw_selected_files.takeItem(i)
+                            break
 
-                    #todo handle gui
+                        i += 1
+
         elif e.is_folder():
-            #todo
+            if src.checkState(0) == QtCore.Qt.Checked:
+                self.__recursive_add_item(src)
+            else:
+                self.__recursive_remove_item(src)
 
-            pass
+    def __recursive_remove_item(self, parent):
+        nb = parent.childCount()
+        for i in range(nb):
+            cw = parent.child(i)
+            e = cw.item
+            if e.is_file():
+                cw.setCheckState(0, QtCore.Qt.Unchecked)
+                self.selected_entries.remove(e)
+                lnb = self.lw_selected_files.count()
+                li = 0
+                while li < lnb:
+                    wi = self.lw_selected_files.item(li)
+                    if str(wi.text()) == e.get_fullpath():
+                        self.lw_selected_files.takeItem(li)
+                        break
+                    li += 1
 
+            elif e.is_folder():
+                cw.setCheckState(0, QtCore.Qt.Unchecked)
+                self.__recursive_remove_item(cw)
 
+    def __recursive_add_item(self, parent):
+        nb = parent.childCount()
+        for i in range(nb):
+            cw = parent.child(i)
+            e = cw.item
+            if e.is_file():
+                cw.setCheckState(0, QtCore.Qt.Checked)
+                self.lw_selected_files.addItem(e.get_fullpath())
+                self.selected_entries.append(e)
+            elif e.is_folder():
+                cw.setCheckState(0, QtCore.Qt.Checked)
+                self.__recursive_add_item(cw)
+
+    def __init_tables(self):
+        columns = QtCore.QStringList()
+        columns.append("Job Id")
+        columns.append("Status")
+        columns.append("Progress")
+        columns.append("Current file")
+
+        self.tbl_jobs.setColumnCount(columns.count())
+        self.tbl_jobs.setHorizontalHeaderLabels(columns)
 
     def __init_tree(self):
         columns = QtCore.QStringList()
@@ -144,11 +199,43 @@ class client_gui(QtGui.QMainWindow, gui.Ui_sufs_client_form):
             tf.setCheckState(0, QtCore.Qt.Unchecked)
             tf.item = e
 
+    def job_update(self, args):
+        print args.job_id, args.progress, args.current_files, args.progress
+
+    def start_job(self):
+
+        if len(self.selected_entries) > 0:
+            print "Starting job"
+            #todo handle if other jobs are running...
+
+            job = client_job(self.get_endpoint(), self.selected_entries)
+            job.job_update.connect(self.job_update)
+            job.start()
+
+
+            #todo add job into the table
+            self.jobs.append(job)
+
+            self.tbl_jobs.insertRow(0)
+
+            cell = QtGui.QTableWidgetItem()
+            cell.setText("%d" % job.job_id)
+            self.tbl_jobs.setItem(0, 0, cell)
+
+            cell = QtGui.QTableWidgetItem()
+            cell.setText("")
+            self.tbl_jobs.setItem(0, 1, cell)
+
+            cell = QtGui.QTableWidgetItem()
+            cell.setText("0 %")
+            self.tbl_jobs.setItem(0, 2, cell)
+
 
     def main(self):
         self.show()
 
 if __name__ == '__main__':
+    #todo a more elegant main script
     app = QtGui.QApplication(sys.argv)
     _client_gui = client_gui()
     _client_gui.main()

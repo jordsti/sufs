@@ -9,9 +9,13 @@ __pycache__/
 .idea/*.xml
 .idea/*/*.xml
 
+
 #project files
 root/*
+recv/*
 index.xml
+
+
 
 # C extensions
 *.so

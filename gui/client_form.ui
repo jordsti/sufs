@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>673</width>
-    <height>556</height>
+    <width>761</width>
+    <height>588</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -19,7 +19,7 @@
      <rect>
       <x>10</x>
       <y>10</y>
-      <width>291</width>
+      <width>231</width>
       <height>121</height>
      </rect>
     </property>
@@ -34,7 +34,7 @@
       <rect>
        <x>0</x>
        <y>20</y>
-       <width>291</width>
+       <width>221</width>
        <height>71</height>
       </rect>
      </property>
@@ -89,7 +89,7 @@
     <widget class="QPushButton" name="btn_get_index">
      <property name="geometry">
       <rect>
-       <x>190</x>
+       <x>120</x>
        <y>90</y>
        <width>101</width>
        <height>23</height>
@@ -105,8 +105,8 @@
      <rect>
       <x>10</x>
       <y>140</y>
-      <width>521</width>
-      <height>301</height>
+      <width>611</width>
+      <height>271</height>
      </rect>
     </property>
     <column>
@@ -115,26 +115,49 @@
      </property>
     </column>
    </widget>
-   <widget class="QLabel" name="lbl_selected_files">
+   <widget class="QGroupBox" name="gb_job">
     <property name="geometry">
      <rect>
-      <x>320</x>
+      <x>250</x>
       <y>10</y>
-      <width>81</width>
-      <height>16</height>
+      <width>371</width>
+      <height>121</height>
      </rect>
     </property>
-    <property name="text">
-     <string>Selected File(s)</string>
+    <property name="title">
+     <string>Selected file(s)</string>
     </property>
+    <widget class="QListWidget" name="lw_selected_files">
+     <property name="geometry">
+      <rect>
+       <x>10</x>
+       <y>20</y>
+       <width>271</width>
+       <height>91</height>
+      </rect>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="btn_start_job">
+     <property name="geometry">
+      <rect>
+       <x>290</x>
+       <y>20</y>
+       <width>75</width>
+       <height>23</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Start Job</string>
+     </property>
+    </widget>
    </widget>
-   <widget class="QListWidget" name="lw_selected_files">
+   <widget class="QTableWidget" name="tbl_jobs">
     <property name="geometry">
      <rect>
-      <x>320</x>
-      <y>30</y>
-      <width>256</width>
-      <height>91</height>
+      <x>10</x>
+      <y>420</y>
+      <width>611</width>
+      <height>111</height>
      </rect>
     </property>
    </widget>
@@ -144,7 +167,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>673</width>
+     <width>761</width>
      <height>21</height>
     </rect>
    </property>
@@ -153,6 +176,8 @@
      <string>&amp;File</string>
     </property>
     <addaction name="actionConnect_to_a_server"/>
+    <addaction name="separator"/>
+    <addaction name="actionQuit"/>
    </widget>
    <addaction name="menu_File"/>
   </widget>
@@ -160,6 +185,11 @@
   <action name="actionConnect_to_a_server">
    <property name="text">
     <string>Connect to a server...</string>
+   </property>
+  </action>
+  <action name="actionQuit">
+   <property name="text">
+    <string>Quit</string>
    </property>
   </action>
  </widget>

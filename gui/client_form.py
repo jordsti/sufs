@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'client_form.ui'
 #
-# Created: Sun Jul 20 16:15:52 2014
+# Created: Mon Jul 21 17:10:53 2014
 #      by: PyQt4 UI code generator 4.10.4
 #
 # WARNING! All changes made in this file will be lost!
@@ -26,15 +26,15 @@ except AttributeError:
 class Ui_sufs_client_form(object):
     def setupUi(self, sufs_client_form):
         sufs_client_form.setObjectName(_fromUtf8("sufs_client_form"))
-        sufs_client_form.resize(673, 556)
+        sufs_client_form.resize(761, 588)
         self.centralwidget = QtGui.QWidget(sufs_client_form)
         self.centralwidget.setObjectName(_fromUtf8("centralwidget"))
         self.gb_server_info = QtGui.QGroupBox(self.centralwidget)
-        self.gb_server_info.setGeometry(QtCore.QRect(10, 10, 291, 121))
+        self.gb_server_info.setGeometry(QtCore.QRect(10, 10, 231, 121))
         self.gb_server_info.setAlignment(QtCore.Qt.AlignLeading|QtCore.Qt.AlignLeft|QtCore.Qt.AlignTop)
         self.gb_server_info.setObjectName(_fromUtf8("gb_server_info"))
         self.formLayoutWidget = QtGui.QWidget(self.gb_server_info)
-        self.formLayoutWidget.setGeometry(QtCore.QRect(0, 20, 291, 71))
+        self.formLayoutWidget.setGeometry(QtCore.QRect(0, 20, 221, 71))
         self.formLayoutWidget.setObjectName(_fromUtf8("formLayoutWidget"))
         self.gp_srv_info_layout = QtGui.QFormLayout(self.formLayoutWidget)
         self.gp_srv_info_layout.setFieldGrowthPolicy(QtGui.QFormLayout.AllNonFixedFieldsGrow)
@@ -59,21 +59,29 @@ class Ui_sufs_client_form(object):
         self.lbl_status_val.setObjectName(_fromUtf8("lbl_status_val"))
         self.gp_srv_info_layout.setWidget(2, QtGui.QFormLayout.FieldRole, self.lbl_status_val)
         self.btn_get_index = QtGui.QPushButton(self.gb_server_info)
-        self.btn_get_index.setGeometry(QtCore.QRect(190, 90, 101, 23))
+        self.btn_get_index.setGeometry(QtCore.QRect(120, 90, 101, 23))
         self.btn_get_index.setObjectName(_fromUtf8("btn_get_index"))
         self.tree_files = QtGui.QTreeWidget(self.centralwidget)
-        self.tree_files.setGeometry(QtCore.QRect(10, 140, 521, 301))
+        self.tree_files.setGeometry(QtCore.QRect(10, 140, 611, 271))
         self.tree_files.setObjectName(_fromUtf8("tree_files"))
         self.tree_files.headerItem().setText(0, _fromUtf8("1"))
-        self.lbl_selected_files = QtGui.QLabel(self.centralwidget)
-        self.lbl_selected_files.setGeometry(QtCore.QRect(320, 10, 81, 16))
-        self.lbl_selected_files.setObjectName(_fromUtf8("lbl_selected_files"))
-        self.lw_selected_files = QtGui.QListWidget(self.centralwidget)
-        self.lw_selected_files.setGeometry(QtCore.QRect(320, 30, 256, 91))
+        self.gb_job = QtGui.QGroupBox(self.centralwidget)
+        self.gb_job.setGeometry(QtCore.QRect(250, 10, 371, 121))
+        self.gb_job.setObjectName(_fromUtf8("gb_job"))
+        self.lw_selected_files = QtGui.QListWidget(self.gb_job)
+        self.lw_selected_files.setGeometry(QtCore.QRect(10, 20, 271, 91))
         self.lw_selected_files.setObjectName(_fromUtf8("lw_selected_files"))
+        self.btn_start_job = QtGui.QPushButton(self.gb_job)
+        self.btn_start_job.setGeometry(QtCore.QRect(290, 20, 75, 23))
+        self.btn_start_job.setObjectName(_fromUtf8("btn_start_job"))
+        self.tbl_jobs = QtGui.QTableWidget(self.centralwidget)
+        self.tbl_jobs.setGeometry(QtCore.QRect(10, 420, 611, 111))
+        self.tbl_jobs.setObjectName(_fromUtf8("tbl_jobs"))
+        self.tbl_jobs.setColumnCount(0)
+        self.tbl_jobs.setRowCount(0)
         sufs_client_form.setCentralWidget(self.centralwidget)
         self.menubar = QtGui.QMenuBar(sufs_client_form)
-        self.menubar.setGeometry(QtCore.QRect(0, 0, 673, 21))
+        self.menubar.setGeometry(QtCore.QRect(0, 0, 761, 21))
         self.menubar.setObjectName(_fromUtf8("menubar"))
         self.menu_File = QtGui.QMenu(self.menubar)
         self.menu_File.setObjectName(_fromUtf8("menu_File"))
@@ -83,7 +91,11 @@ class Ui_sufs_client_form(object):
         sufs_client_form.setStatusBar(self.statusbar)
         self.actionConnect_to_a_server = QtGui.QAction(sufs_client_form)
         self.actionConnect_to_a_server.setObjectName(_fromUtf8("actionConnect_to_a_server"))
+        self.actionQuit = QtGui.QAction(sufs_client_form)
+        self.actionQuit.setObjectName(_fromUtf8("actionQuit"))
         self.menu_File.addAction(self.actionConnect_to_a_server)
+        self.menu_File.addSeparator()
+        self.menu_File.addAction(self.actionQuit)
         self.menubar.addAction(self.menu_File.menuAction())
 
         self.retranslateUi(sufs_client_form)
@@ -99,7 +111,9 @@ class Ui_sufs_client_form(object):
         self.lbl_status.setText(_translate("sufs_client_form", "Status :", None))
         self.lbl_status_val.setText(_translate("sufs_client_form", "lbl_status_val", None))
         self.btn_get_index.setText(_translate("sufs_client_form", "Retrieve Index", None))
-        self.lbl_selected_files.setText(_translate("sufs_client_form", "Selected File(s)", None))
+        self.gb_job.setTitle(_translate("sufs_client_form", "Selected file(s)", None))
+        self.btn_start_job.setText(_translate("sufs_client_form", "Start Job", None))
         self.menu_File.setTitle(_translate("sufs_client_form", "&File", None))
         self.actionConnect_to_a_server.setText(_translate("sufs_client_form", "Connect to a server...", None))
+        self.actionQuit.setText(_translate("sufs_client_form", "Quit", None))
 

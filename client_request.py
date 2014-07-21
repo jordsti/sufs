@@ -16,6 +16,7 @@ class network_request(QtCore.QThread):
         self.sended_packets = []
         self.received_packets = []
         self.client = None
+        self.completed = False
 
     def __sent_packet(self, packet):
         self.sended_packets.append(packet)
@@ -49,6 +50,7 @@ class network_request(QtCore.QThread):
             self.client.set_endpoint(self.endpoint)
 
     def terminate(self):
+        self.completed = True
         self.__received()
 
     def __received(self):
@@ -151,3 +153,44 @@ class file_request(network_request):
             self.file_ctor = file_constructor.file_constructor(name, fhash, length, bsize)
 
         self.terminate()
+
+
+
+class file_retrieve(network_request):
+
+    def __init__(self, endpoint, file_ctor, local_path=None, received=None):
+        network_request.__init__(self, endpoint, received)
+        self.file_ctor = file_ctor
+        self.local_path = local_path
+
+    def run(self):
+
+        for m in self.file_ctor.missing_blocks():
+            p = network.packet()
+            p.header = network.packet_header()
+            p.header.packet_type = network.packet_header.Request
+            p.header.fields['request'] = 'file_block'
+            p.header.fields["block_id"] = str(m)
+            p.header.fields["hash"] = self.file_ctor.filehash
+
+            self.send(p)
+
+            recv = self.recv()
+
+            if recv.header.packet_type == network.packet_header.FileBlock:
+                b_id = int(recv.header.fields['block_id'])
+                parent_hash = recv.header.fields['parent_hash']
+
+                if self.file_ctor.filehash == parent_hash:
+                    self.file_ctor.put_data(b_id, recv.bytes)
+                else:
+                    print "Bad Hash !"
+
+        if self.file_ctor.is_completed():
+            #todo file hash check
+            self.terminate()
+        else:
+            print self.file_ctor.missing_blocks()
+
+
+
